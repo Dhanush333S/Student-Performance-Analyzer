@@ -485,6 +485,10 @@ class po_form_upload(FlaskForm):
 class staffid_coursecode(FlaskForm):
     file = FileField("Upload Staff ID Course Code Mapping", validators=[FileRequired()])
     submit = SubmitField("Submit Mapping")
+
+class staffid_add(FlaskForm):
+    file = FileField("Upload Staff ID", validators=[FileRequired()])
+    submit = SubmitField("Submit Mapping")
     
 class add_grade_mapping(FlaskForm):
     scheme_year = IntegerField(

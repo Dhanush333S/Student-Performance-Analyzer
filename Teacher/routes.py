@@ -39,7 +39,8 @@ from Teacher.forms import (
     large_talk,
     po_form_upload, 
     staffid_coursecode,
-    add_grade_mapping
+    add_grade_mapping,
+    staffid_add
 )
 from Teacher.models import (
     User,
@@ -3038,6 +3039,43 @@ def disp_assignmentmapping():
 # upload of csv files and adding the data to database
 
 # Upload the staff is coursecode mapping
+@app.route('/addstaffid', methods=['GET', 'POST'])
+def upload_add_staff():
+    form = staffid_add()
+    
+    if form.validate_on_submit():
+        filename = secure_filename(form.file.data.filename)
+        file_path = app.config["UPLOAD_FOLDER"] + filename
+        form.file.data.save(file_path)
+        d = {}
+        
+        with open(file_path, 'r', newline="") as f:
+            r = csv.DictReader(f)
+            
+            for i in r:
+                # d[str(i['STAFFID'])] = 
+                if i['STAFFID']=="":
+                    continue
+                update_staffid_cc = User.query.filter_by(username = str(i['STAFFID'])).first()
+                update_email_cc = User.query.filter_by(email = str(i['EMAIL'])).first()
+                if update_staffid_cc:
+                # if update_staffid_cc or update_email_cc:
+                    flash(f"STAFF ID {i['STAFFID']} OR EMAIL {i['EMAIL']} present already !!")
+                    continue
+                else:
+                    new_mapping = User(username = str(i['STAFFID']), email=i['EMAIL'], role=i['ROLE'])
+                    db.session.add(new_mapping)
+                    db.session.commit()
+        
+        flash("All staff id have been uploaded !", category="success")
+    
+    if form.errors != {}:
+        for err_msg in form.errors.values():
+            flash(f"There was an error : {err_msg}", category="danger")
+
+    return render_template("staffid_add.html", form=form)
+
+# Upload the staff is coursecode mapping
 @app.route('/uploadstaffidcoursecodemapping', methods=['GET', 'POST'])
 def upload_mapping():
     form = staffid_coursecode()
@@ -3053,6 +3091,8 @@ def upload_mapping():
             
             for i in r:
                 # d[str(i['STAFFID'])] = 
+                if i['STAFFID']=="":
+                    continue
                 update_staffid_cc = staffid_cc.query.filter_by(staffid = str(i['STAFFID']), coursecode=i['COURSECODE'], semester=i['SEMESTER']).first()
                 if update_staffid_cc:
                     continue

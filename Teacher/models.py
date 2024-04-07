@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length = 30), nullable = False, unique = True)
     password_hash = db.Column(db.String(length = 300), nullable = True)
     role=db.Column(db.String(length=30),nullable=False,default="staff")
+    email=db.Column(db.String(length=300),nullable=False)
     # def __init__(self, username, password):
     #     self.username = username
     #     self.password = password
