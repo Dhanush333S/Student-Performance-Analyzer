@@ -3058,6 +3058,9 @@ def upload_add_staff():
                     continue
                 update_staffid_cc = User.query.filter_by(username = str(i['STAFFID'])).first()
                 update_email_cc = User.query.filter_by(email = str(i['EMAIL'])).first()
+                if not (i['STAFFID']=="admin" or i["STAFFID"]=="staff"):
+                    flash("Only roles availabe is staff and admin")
+                    continue
                 if update_staffid_cc:
                 # if update_staffid_cc or update_email_cc:
                     flash(f"STAFF ID {i['STAFFID']} OR EMAIL {i['EMAIL']} present already !!")
@@ -5035,6 +5038,18 @@ def download_posample():
     flash("The sample PO file has been created and will now be downloaded")   
 
     return send_file(samples_path_po, as_attachment=True)
+
+@app.route("/downloadaddstaffid", methods=['GET', 'POST'])
+def download_add_staffid():
+    sample_filename = "addstaffid.csv"
+    samples_path_mapping = app.config["SAMPLES_FOLDER"] + sample_filename
+    
+    with open(samples_path_mapping, "w", newline="") as f:
+        head = ["STAFFID", "EMAIL", "ROLE"]
+        w = csv.DictWriter(f, fieldnames=head)
+        w.writeheader()
+    
+    return send_file(samples_path_mapping, as_attachment=True)
 
 @app.route("/downloadstaffidccmapping", methods=['GET', 'POST'])
 def download_staffid_cc_mapping():
