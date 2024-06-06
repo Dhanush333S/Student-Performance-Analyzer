@@ -3574,23 +3574,36 @@ def labco_calc():
         form.file.data.save(file_path)
 
         with open(file_path, "r", newline="") as f:
-            for i in range(14):
-                skip_mapping = next(f)
+            # for i in range(14):
+            #     skip_mapping = next(f)
 
             r = csv.reader(f)
 
             for row in r:
-                usn = row[1]
-                co1p = row[79]
-                co2p = row[80]
-                co3p = row[81]
-                co4p = row[82]
-                co5p = row[83]
-                co6p = row[84]
-                co7p = row[85]
-                co8p = row[86]
-                co9p = row[87]
-                co10p = row[88]
+                # usn = row[1]
+                # co1p = row[79]
+                # co2p = row[80]
+                # co3p = row[81]
+                # co4p = row[82]
+                # co5p = row[83]
+                # co6p = row[84]
+                # co7p = row[85]
+                # co8p = row[86]
+                # co9p = row[87]
+                # co10p = row[88]
+                if(row["USN"]==""):
+                    continue
+                usn = row["USN"]
+                co1p = row["co1p"]
+                co2p = row["co2p"]
+                co3p = row["co3p"]
+                co4p = row["co4p"]
+                co5p = row["co5p"]
+                co6p = row["co6p"]
+                co7p = row["co7p"]
+                co8p = row["co8p"]
+                co9p = row["co9p"]
+                co10p = row["co10p"]
 
                 check = lab_co.query.filter_by(usn=usn, coursecode=course_code).first()
                 if check:
