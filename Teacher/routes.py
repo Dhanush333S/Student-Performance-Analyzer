@@ -3577,7 +3577,7 @@ def labco_calc():
             # for i in range(14):
             #     skip_mapping = next(f)
 
-            r = csv.reader(f)
+            r = csv.Dictreader(f)
 
             for row in r:
                 # usn = row[1]
